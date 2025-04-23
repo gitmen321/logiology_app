@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
@@ -33,21 +32,21 @@ class ProfileController extends GetxController {
     await prefs.setString('profileImagePath', profileImagePath.value);
   }
 
-  // Update username
+  //  username updt
   void updateUsername(String newUsername) async {
     username.value = newUsername;
     await _saveProfileData();
     Get.snackbar('Success', 'Username updated');
   }
 
-  // Update password
+  //  password updt
   void updatePassword(String newPassword) async {
     password.value = newPassword;
     await _saveProfileData();
     Get.snackbar('Success', 'Password updated');
   }
 
-  // Pick image from camera or gallery
+  // Image picking from camera/gallry
   Future<void> pickImage(ImageSource source) async {
     final XFile? image = await _picker.pickImage(source: source);
     if (image != null) {
@@ -67,7 +66,7 @@ class ProfileController extends GetxController {
     }
   }
 
-  // Show password confirmation dialog
+  //  password confirmation dialogg
   void showPasswordConfirmationDialog() {
     final TextEditingController passController = TextEditingController();
 

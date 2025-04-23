@@ -1,13 +1,11 @@
-// ignore_for_file: deprecated_member_use
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:logiology_app/app/routes/app_routes.dart';
-// import 'package:logiology_app/core/themes/app_theme.dart';
-import '../controllers/product_controller.dart';
-// import '../../../app/routes/app_routes.dart';
-// import 'product_detail_page.dart';
+import 'package:logiology_app/core/constants/app_constants.dart';
+import 'package:logiology_app/core/utils/common_widgets.dart';
+import 'package:logiology_app/core/utils/custom_loader.dart';
+import 'package:logiology_app/features/products/presentation/controllers/product_controller.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -20,18 +18,18 @@ class HomePage extends StatelessWidget {
       backgroundColor: Color.fromARGB(255, 4, 9, 14),
       appBar: AppBar(
         leading: Padding(
-          padding: const EdgeInsets.only(left: 25.0),
+          padding: const EdgeInsets.only(left: 22.0),
           child: ClipRRect(
             child: CircleAvatar(
-              backgroundImage: AssetImage(
-                  'assets/logo/logiologylogo.png'), // 👈 make sure this path matches your asset
-              radius: 20,
+              backgroundImage: AssetImage(AppConstants.appLogo),
+              radius: 10,
               backgroundColor: Colors.transparent,
             ),
           ),
         ),
         backgroundColor: Color.fromARGB(255, 4, 9, 14),
-        title: Text('Logiology', style: GoogleFonts.lato(color: Colors.white, fontSize: 20)),
+        title: Text('Logiology',
+            style: GoogleFonts.lato(color: Colors.white, fontSize: 20)),
         actions: [
           IconButton(
             icon: const Icon(
@@ -44,13 +42,22 @@ class HomePage extends StatelessWidget {
       ),
       body: Obx(() {
         if (controller.isLoading.value && controller.products.isEmpty) {
-          return Center(
-            child: SizedBox(
-              width: 150, // or MediaQuery.of(context).size.width * 0.8
-              child: LinearProgressIndicator(
-                color: Colors.white,
-                backgroundColor: Colors.white24,
-                minHeight: 4,
+          return SizedBox.expand(
+            child: Center(
+              child: SizedBox(
+                width: 150,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    CustomLoader(),
+                    SizedBox(height: 8,),
+                    Text(
+                      'Explore our products',
+                      style:
+                          GoogleFonts.lato(fontSize: 15, color: Colors.white),
+                    )
+                  ],
+                ),
               ),
             ),
           );
@@ -84,7 +91,7 @@ class HomePage extends StatelessWidget {
               child: Row(
                 children: [
                   IconButton(
-                      onPressed: () => _showFilterDialog(context, controller),
+                      onPressed: () => showFilterDialog(context, controller),
                       icon: Icon(
                         Icons.tune_rounded,
                         color: Colors.white,
@@ -120,17 +127,15 @@ class HomePage extends StatelessWidget {
                           child: Padding(
                             padding: const EdgeInsets.all(12.0),
                             child: Column(
-                              mainAxisSize: MainAxisSize
-                                  .min, // Ensures Column shrinks to fit content
+                              mainAxisSize: MainAxisSize.min,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 ClipRRect(
                                   borderRadius: BorderRadius.circular(12),
                                   child: Image.network(
                                     product.thumbnail,
-                                    height: constraints.maxWidth > 200
-                                        ? 120
-                                        : 100, // adjusts height based on screen
+                                    height:
+                                        constraints.maxWidth > 200 ? 120 : 100,
                                     width: double.infinity,
                                     fit: BoxFit.cover,
                                   ),
@@ -185,13 +190,10 @@ class HomePage extends StatelessWidget {
             if (controller.isLoading.value)
               Center(
                 child: SizedBox(
-                  width: 100,
-                  child: LinearProgressIndicator(
-                    color: Colors.white,
-                    backgroundColor: Colors.white24,
-                    minHeight: 4,
-                  ),
-                ),
+                    width: 100,
+                    child: CustomLoader(
+                      size: 20,
+                    )),
               ),
             IconButton(
                 onPressed: () => controller.fetchProducts(isLoadMore: true),
@@ -202,135 +204,6 @@ class HomePage extends StatelessWidget {
           ],
         );
       }),
-    );
-  }
-
-  void _showFilterDialog(BuildContext context, ProductController controller) {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          backgroundColor: const Color(0xFF1E1E1E),
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-          title: const Text(
-            'Filter Products',
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 20,
-              color: Colors.white,
-            ),
-          ),
-          content: SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const SizedBox(height: 10),
-                Text("Category", style: TextStyle(color: Colors.white70)),
-                const SizedBox(height: 4),
-                DropdownButtonFormField<String>(
-                  value: controller.selectedCategory.value.isEmpty
-                      ? null
-                      : controller.selectedCategory.value,
-                  decoration: _dropdownDecoration(),
-                  dropdownColor: Colors.grey[900],
-                  style: const TextStyle(color: Colors.white),
-                  hint: const Text('Select Category',
-                      style: TextStyle(color: Colors.white54)),
-                  items: ['electronics', 'clothing', 'jewelry', 'Perfumes']
-                      .map((category) => DropdownMenuItem(
-                            value: category,
-                            child: Text(category),
-                          ))
-                      .toList(),
-                  onChanged: (value) {
-                    controller.selectedCategory.value = value ?? '';
-                    controller.filterProducts();
-                  },
-                ),
-                const SizedBox(height: 16),
-                Text("Tag", style: TextStyle(color: Colors.white70)),
-                const SizedBox(height: 4),
-                DropdownButtonFormField<String>(
-                  value: controller.selectedTag.value.isEmpty
-                      ? null
-                      : controller.selectedTag.value,
-                  decoration: _dropdownDecoration(),
-                  dropdownColor: Colors.grey[900],
-                  style: const TextStyle(color: Colors.white),
-                  hint: const Text('Select Tag',
-                      style: TextStyle(color: Colors.white54)),
-                  items: ['new', 'sale', 'popular']
-                      .map((tag) => DropdownMenuItem(
-                            value: tag,
-                            child: Text(tag),
-                          ))
-                      .toList(),
-                  onChanged: (value) {
-                    controller.selectedTag.value = value ?? '';
-                    controller.filterProducts();
-                  },
-                ),
-                const SizedBox(height: 24),
-                Text("Max Price: \$${controller.maxPrice.value.toInt()}",
-                    style: TextStyle(color: Colors.white70)),
-                Slider(
-                  value: controller.maxPrice.value,
-                  min: 0,
-                  max: 1000,
-                  divisions: 100,
-                  activeColor: Colors.teal,
-                  inactiveColor: Colors.white24,
-                  label: '\$${controller.maxPrice.value.round()}',
-                  onChanged: (value) {
-                    controller.maxPrice.value = value;
-                    controller.filterProducts();
-                  },
-                ),
-              ],
-            ),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                controller.resetFilters();
-                Get.back();
-              },
-              child: Text(
-                'Reset',
-                style: GoogleFonts.lato(
-                    color: Colors.redAccent, fontWeight: FontWeight.bold),
-              ),
-            ),
-            ElevatedButton(
-              onPressed: () => Get.back(),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color.fromARGB(255, 25, 62, 126),
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8)),
-              ),
-              child: Text(
-                'Apply',
-                style: GoogleFonts.lato(
-                    color: Colors.white, fontWeight: FontWeight.bold),
-              ),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  InputDecoration _dropdownDecoration() {
-    return InputDecoration(
-      filled: true,
-      fillColor: Colors.white10,
-      contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-      border: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(10),
-        borderSide: BorderSide.none,
-      ),
     );
   }
 }

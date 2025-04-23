@@ -12,9 +12,13 @@ class ChangePasswordPage extends StatelessWidget {
     final TextEditingController confirmPassController = TextEditingController();
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Change Password')),
+      appBar: AppBar(
+        leading: IconButton(onPressed: ()=> Get.back(),
+         icon: Icon(Icons.arrow_back_ios_new)),
+        title: const Text('Change Password'),
+      ),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(26.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -60,10 +64,14 @@ class ChangePasswordPage extends StatelessWidget {
                   Get.back();
                 },
                 style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
                   backgroundColor: Colors.teal,
                 ),
-                child: const Text('Update Password'),
+                child: const Text(
+                  'Update Password',
+                  style: TextStyle(color: Colors.white),
+                ),
               ),
             ),
           ],

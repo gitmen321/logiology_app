@@ -25,14 +25,14 @@ class ProductController extends GetxController {
     try {
       final newProducts = await repository.fetchProducts(
         skip: isLoadMore ? page.value * 10 : 0,
-        limit: 10,
+        limit: 30,
       );
       if (isLoadMore) {
         products.addAll(newProducts);
       } else {
         products.assignAll(newProducts);
       }
-      filteredProducts.assignAll(products);
+      filterProducts(); 
       if (isLoadMore) page.value++;
     } catch (e) {
       Get.snackbar('Error', 'Failed to load products');
@@ -57,7 +57,7 @@ class ProductController extends GetxController {
   void resetFilters() {
     selectedCategory.value = '';
     selectedTag.value = '';
-    maxPrice.value = 1000.0;
+    maxPrice.value = 500.0;
     searchQuery.value = '';
     filterProducts();
   }

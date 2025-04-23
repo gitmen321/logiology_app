@@ -3,9 +3,9 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:logiology_app/app/routes/app_routes.dart';
+import 'package:logiology_app/core/utils/common_widgets.dart';
 import 'dart:io';
 import '../controllers/profile_controller.dart';
-// import '../../routes/app_routes.dart';
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});
@@ -15,7 +15,15 @@ class ProfilePage extends StatelessWidget {
     final ProfileController controller = Get.put(ProfileController());
 
     return Scaffold(
-      appBar: AppBar(title:  Text('My Profile', style: GoogleFonts.lato(color: Colors.white, fontSize: 20),)),
+      appBar: AppBar(
+        leading: IconButton(onPressed: ()=> Get.back(),
+         icon: Icon(Icons.arrow_back_ios_new)),
+        title: Text(
+          'My Profile',
+          style: GoogleFonts.lato(color: Colors.white, fontSize: 20),
+        ),
+        
+      ),
       body: Obx(() => SingleChildScrollView(
             padding: const EdgeInsets.all(16.0),
             child: Column(
@@ -25,7 +33,8 @@ class ProfilePage extends StatelessWidget {
                     children: [
                       CircleAvatar(
                         radius: 55,
-                        backgroundImage: controller.profileImagePath.value.isNotEmpty
+                        backgroundImage: controller
+                                .profileImagePath.value.isNotEmpty
                             ? FileImage(File(controller.profileImagePath.value))
                             : null,
                         child: controller.profileImagePath.value.isEmpty
@@ -63,7 +72,8 @@ class ProfilePage extends StatelessWidget {
                           child: const CircleAvatar(
                             radius: 18,
                             backgroundColor: Colors.blueAccent,
-                            child: Icon(Icons.edit, color: Colors.white, size: 18),
+                            child:
+                                Icon(Icons.edit, color: Colors.white, size: 18),
                           ),
                         ),
                       )
@@ -73,90 +83,45 @@ class ProfilePage extends StatelessWidget {
                 const SizedBox(height: 20),
 
                 // List Tiles
-                _buildListTile(
+                buildListTile(
                   icon: Icons.lock_reset,
                   title: 'Change Username & Password',
                   onTap: () => Get.toNamed(AppRoutes.changePassword),
                 ),
-                _buildListTile(
+                buildListTile(
                   icon: Icons.card_giftcard,
                   title: 'Refer & Earn',
-                  onTap: () => Get.snackbar("Coming Soon", "Referral system is in progress 🚀"),
+                  onTap: () => Get.snackbar(
+                      "Coming Soon", "Referral system is in progress 🚀"),
                 ),
-                _buildListTile(
+                buildListTile(
                   icon: Icons.support_agent,
                   title: 'Contact Us',
-                  onTap: () => Get.snackbar("Contact Us", "Email: support@logiology.com"),
+                  onTap: () =>
+                      Get.snackbar("Contact Us", "Email: abcd@logiology.com"),
                 ),
 
                 const SizedBox(height: 24),
 
-                // Logout Button
                 ElevatedButton.icon(
-                  onPressed: () => _confirmLogout(context),
-                  icon: const Icon(Icons.logout_rounded),
+                  onPressed: () => confirmLogout(context),
+                  icon: const Icon(
+                    Icons.logout_rounded,
+                    color: Colors.white,
+                  ),
                   label: const Text('Logout'),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.redAccent,
                     foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 20, vertical: 12),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10)),
                   ),
                 )
               ],
             ),
           )),
-    );
-  }
-
-  Widget _buildListTile({
-    required IconData icon,
-    required String title,
-    required VoidCallback onTap,
-  }) {
-    return Card(
-      color: Colors.white10,
-      margin: const EdgeInsets.symmetric(vertical: 8),
-      child: ListTile(
-        leading: Icon(icon, color: Colors.white),
-        title: Text(title, style: const TextStyle(color: Colors.white)),
-        trailing: const Icon(Icons.arrow_forward_ios, size: 16, color: Colors.white54),
-        onTap: onTap,
-      ),
-    );
-  }
-
-  void _confirmLogout(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        backgroundColor: const Color(0xFF1E1E1E),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        title: const Text(
-          'Logout Confirmation',
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-        ),
-        content: const Text(
-          'Are you sure you want to logout?',
-          style: TextStyle(color: Colors.white70),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Get.back(),
-            child: const Text('Cancel', style: TextStyle(color: Colors.grey)),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              Get.offAllNamed(AppRoutes.login);
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.redAccent,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-            ),
-            child: const Text('Logout'),
-          ),
-        ],
-      ),
     );
   }
 }

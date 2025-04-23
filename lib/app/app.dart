@@ -14,8 +14,7 @@ class MyApp extends StatelessWidget {
       theme: appTheme.themeData.copyWith(
         textTheme: appTheme.textTheme,
       ),
-      // initialRoute: AppRoutes.login,
-      initialRoute: AppRoutes.home,//for testing homepage
+      initialRoute: AppRoutes.login,
 
       getPages: AppRoutes.routes,
       debugShowCheckedModeBanner: false,

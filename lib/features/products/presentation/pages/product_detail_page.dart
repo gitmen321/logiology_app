@@ -15,6 +15,8 @@ class ProductDetailPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(product.title, style: GoogleFonts.lato(color: Colors.white, fontSize: 20),),
+        leading: IconButton(onPressed: ()=> Get.back(),
+         icon: Icon(Icons.arrow_back_ios_new)),
         backgroundColor: Colors.black,
         centerTitle: true,
         elevation: 0,

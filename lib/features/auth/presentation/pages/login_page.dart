@@ -1,55 +1,8 @@
-// import 'package:flutter/material.dart';
-// import 'package:get/get.dart';
-// import 'package:logiology_app/app/routes/app_routes.dart';
-// import '../controllers/auth_controller.dart';
-// // import '../../../app/routes/app_routes.dart';
-
-// class LoginPage extends StatelessWidget {
-//   const LoginPage({super.key});
-
-//   @override
-//   Widget build(BuildContext context) {
-//     final AuthController controller = Get.put(AuthController());
-
-//     return Scaffold(
-//       appBar: AppBar(title: const Text('Login')),
-//       body: Padding(
-//         padding: const EdgeInsets.all(16.0),
-//         child: Column(
-//           mainAxisAlignment: MainAxisAlignment.center,
-//           children: [
-//             TextField(
-//               decoration: const InputDecoration(labelText: 'Username'),
-//               onChanged: (value) => controller.username.value = value,
-//             ),
-//             TextField(
-//               decoration: const InputDecoration(labelText: 'Password'),
-//               obscureText: true,
-//               onChanged: (value) => controller.password.value = value,
-//             ),
-//             const SizedBox(height: 20),
-//             ElevatedButton(
-//               onPressed: () {
-//                 if (controller.validateLogin()) {
-//                   Get.offNamed(AppRoutes.home);
-//                 } else {
-//                   Get.snackbar('Error', 'Invalid credentials');
-//                 }
-//               },
-//               child: const Text('Login'),
-//             ),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-// }
-
 // ignore_for_file: deprecated_member_use
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:logiology_app/app/routes/app_routes.dart';
+import 'package:logiology_app/core/constants/app_constants.dart';
 import 'package:logiology_app/core/themes/app_theme.dart';
 import '../controllers/auth_controller.dart';
 
@@ -97,7 +50,7 @@ class _LoginPageState extends State<LoginPage> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Image.asset(
-                          'assets/logo/logiologylogo.png',
+                         AppConstants.appLogo ,
                           height: 200,
                         ),
                         const SizedBox(height: 20),
@@ -191,11 +144,13 @@ class _LoginPageState extends State<LoginPage> {
                                 borderRadius: BorderRadius.circular(12),
                               ),
                             ),
-                            onPressed: () {
-                              if (controller.validateLogin()) {
-                                Get.offNamed(AppRoutes.home);
+                            onPressed: () async {
+                              bool isValid = await controller.validateLogin();
+                              if (isValid) {
+                                Get.snackbar('Success', 'Login successful');
+                                Get.offNamed('/home'); 
                               } else {
-                                Get.snackbar('Error', 'Invalid credentials');
+                                Get.snackbar('Error', 'Invalid username or password');
                               }
                             },
                             child: Text(
